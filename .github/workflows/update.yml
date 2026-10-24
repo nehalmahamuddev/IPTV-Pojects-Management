@@ -1,0 +1,107 @@
+name: update
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '*/15 * * * *'
+permissions:
+  contents: write
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: tibdex/github-app-token@0d49dd721133f900ebd5e0dff2810704e8defbc6 # v1.8.2
+        if: ${{ !env.ACT && secrets.APP_ID != '' && secrets.APP_PRIVATE_KEY != '' }}
+        id: create-app-token
+        with:
+          app_id: ${{ secrets.APP_ID }}
+          private_key: ${{ secrets.APP_PRIVATE_KEY }}
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        if: ${{ !env.ACT }}
+        with:
+          token: ${{ steps.create-app-token.outputs.token || secrets.GITHUB_TOKEN }}
+      - uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # v7.1.0
+        with:
+          node-version: 22
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm install
+
+      # Toffee Live 15-minute updater
+      - name: Update Toffee playlist
+        env:
+          TOFFEE_PROXY: ${{ secrets.TOFFEE_PROXY }}
+        run: |
+          npm run toffee:update
+          npx m3u-linter -c m3u-linter.json playlist/toffee.m3u
+
+      # Check if this run is a daily scheduled run or manual trigger for full IPTV generation
+      - name: Check run mode
+        id: run-mode
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] || [ "${{ github.event.schedule }}" = "0 0 * * *" ]; then
+            echo "is_daily=true" >> $GITHUB_OUTPUT
+          else
+            echo "is_daily=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Update internal playlists
+        if: steps.run-mode.outputs.is_daily == 'true'
+        id: playlist-update
+        run: |
+          npm run playlist:update
+          echo "processed_issues=$(cat temp/logs/playlist_update.log 2>/dev/null || echo 0)" >> $GITHUB_OUTPUT
+      - name: Check internal playlists
+        if: steps.run-mode.outputs.is_daily == 'true'
+        run: |
+          npm run playlist:lint
+          npm run playlist:validate --- --log-level=error
+      - name: Generate public playlists
+        if: steps.run-mode.outputs.is_daily == 'true'
+        run: npm run playlist:generate
+      - name: Create .api/streams.json
+        if: steps.run-mode.outputs.is_daily == 'true'
+        run: npm run playlist:export
+      - name: Update readme
+        if: steps.run-mode.outputs.is_daily == 'true'
+        run: npm run readme:update
+
+      - name: Setup git
+        run: |
+          git config user.name "iptv-bot[bot]"
+          git config user.email "84861620+iptv-bot[bot]@users.noreply.github.com"
+
+      - name: Commit changes to /playlist
+        run: |
+          git add playlist/toffee.m3u playlist/toffee.json
+          git status
+          git diff --staged --quiet || git commit -m "[Bot] Auto-update Toffee playlist" -m "Committed via [update](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) workflow." --no-verify
+
+      - name: Commit changes to /streams
+        if: steps.run-mode.outputs.is_daily == 'true' && steps.playlist-update.outputs.processed_issues != 0
+        run: |
+          git add streams
+          git status
+          git commit --allow-empty -m "[Bot] Update /streams" -m "Committed by [iptv-bot](https://github.com/apps/iptv-bot) via [update](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) workflow." -m "${{ steps.playlist-update.outputs.processed_issues }}" --no-verify
+      - name: Commit changes to PLAYLIST.md
+        if: steps.run-mode.outputs.is_daily == 'true'
+        run: |
+          git add PLAYLISTS.md
+          git status
+          git commit --allow-empty -m "[Bot] Update PLAYLISTS.md" -m "Committed by [iptv-bot](https://github.com/apps/iptv-bot) via [update](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}) workflow." --no-verify
+
+      - name: Push all changes to the repository
+        if: ${{ !env.ACT && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main') }}
+        run: git push
+
+      - name: Deploy Toffee playlist to GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@fa24774553152dd7873cd16ebd8d959b010c5445 # 4.9.0
+        if: ${{ !env.ACT && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main') }}
+        with:
+          branch: gh-pages
+          folder: playlist
+          token: ${{ steps.create-app-token.outputs.token || secrets.GITHUB_TOKEN }}
+          git-config-name: iptv-bot[bot]
+          git-config-email: 84861620+iptv-bot[bot]@users.noreply.github.com
+          commit-message: '[Bot] Deploy Toffee playlist to GitHub Pages'
+          clean: false
