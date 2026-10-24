@@ -25,6 +25,8 @@ jobs:
       - name: Update Toffee playlist
         env:
           TOFFEE_PROXY: ${{ secrets.TOFFEE_PROXY }}
+          TOFFEE_DEVICE_TOKEN: ${{ secrets.TOFFEE_DEVICE_TOKEN }}
+          TOFFEE_AUTH_TOKEN: ${{ secrets.TOFFEE_AUTH_TOKEN }}
         run: |
           npm run toffee:update
           npx m3u-linter -c m3u-linter.json playlist/toffee.m3u
