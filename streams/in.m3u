@@ -1669,8 +1669,6 @@ http://dksmedia.tv/play/live.php?mac=00:1A:79:B6:60:3D&stream=1752848&extension=
 http://dksmedia.tv/play/live.php?mac=00:1A:79:B6:60:3D&stream=209743&extension=ts&play_token=mR7FwO88sY
 #EXTINF:-1 tvg-id="StarJalsha.in@SD",Star Jalsha (1080p) [Geo-blocked]
 http://cdn98.com/play/live.php?mac=00:1A:79:99:54:11&stream=225805&extension=ts&play_token=o1cczsG9wV
-#EXTINF:-1 tvg-id="NationalGeographic.in@SD",National Geographic (576p) [Geo-blocked]
-http://main.light-ott.net:80/play/live.php?mac=00:1A:79:17:28:41&stream=373017&extension=ts&play_token=zCaGy5dtla
 #EXTINF:-1 tvg-id="SandeshNews.in@SD",Sandesh News (576p)
 https://mumt01.tangotv.in/O5aw8Zn3SANDESHNEWS/index.m3u8
 #EXTINF:-1 tvg-id="KNewsIndia.in@SD",K News India (576p)
@@ -2355,10 +2353,6 @@ http://103.185.24.134:3001/Star-Movies/index.m3u8
 http://103.185.24.134:3001/Star-Plus/index.m3u8
 #EXTINF:-1 tvg-id="StarGold.in@HD",Star Gold HD (1080p)
 http://103.185.24.134:3001/Star-Gold/index.m3u8
-#EXTINF:-1 tvg-id="NationalGeographic.in@HD",National Geographic HD (1080p)
-http://103.185.24.134:3001/NATGEO-HD/index.m3u8
-#EXTINF:-1 tvg-id="NationalGeographicWild.in@HD",National Geographic Wild HD (1080p)
-http://103.185.24.134:3001/NATGEO-WILD-HD/index.m3u8
 #EXTINF:-1 tvg-id="SonySportsTen1.in@HD",Sony Sports Ten 1 HD (1080p)
 http://103.185.24.134:3001/SonyTenSports1/index.m3u8
 #EXTINF:-1 tvg-id="SonyBBCEarth.in@HD",Sony BBC Earth HD (1080p)
@@ -2387,14 +2381,10 @@ http://103.151.60.162:2122/play/a018/index.m3u8?hls
 http://103.151.60.162:2122/play/a016/index.m3u8?hls
 #EXTINF:-1 tvg-id="Enterr10Bangla.in@SD",Enterr 10 Bangla (576p)
 http://103.151.60.162:2122/play/a0fa/index.m3u8?hls
-#EXTINF:-1 tvg-id="HistoryTV18.in@SD",History TV18 (576p)
-http://103.151.60.162:2122/play/a00y/index.m3u8?hls
 #EXTINF:-1 tvg-id="JalshaMovies.in@HD",Jalsha Movies HD (1080p)
 http://103.151.60.162:2122/play/a00x/index.m3u8?hls
 #EXTINF:-1 tvg-id="MoviesNow.in@HD",Movies Now HD (1080p)
 http://103.151.60.162:2122/play/a02w/index.m3u8?hls
-#EXTINF:-1 tvg-id="NationalGeographicWild.in@HD",National Geographic Wild HD (1080p)
-http://103.151.60.162:2122/play/a01f/index.m3u8?hls
 #EXTINF:-1 tvg-id="Pogo.in@SD",Pogo (576p)
 http://103.151.60.162:2122/play/a01e/index.m3u8?hls
 #EXTINF:-1 tvg-id="RupasiBangla.in@SD",Rupasi Bangla (576p)
@@ -2467,10 +2457,6 @@ http://103.151.60.162:2122/play/a028/index.m3u8?hls
 #EXTVLCOPT:http-referrer=https://bhoomtv.org/
 #EXTVLCOPT:http-user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/154.0.0.0 Safari/537.36
 https://yupp-music.keralive.workers.dev/out/v1/a797c00cba954265ba781f92a57e2cf5/index.m3u8
-#EXTINF:-1 tvg-id="HistoryTV18.in@HD",History TV18 HD
-#EXTVLCOPT:http-referrer=https://bhoomtv.org/
-#EXTVLCOPT:http-user-agent=Mozilla/5.0 (Windows NT 10.0 Win64 x64) AppleWebKit/537.36 (KHTML like Gecko) Chrome/154.0.0.0 Safari/537.36
-https://techtraveleat.in/stream.m3u8?id=historytv18eng
 #EXTINF:-1 tvg-id="Zoom.in@Nepal",Zoom Nepal (720p)
 https://pubads.g.doubleclick.net/ssai/event/JCAm25qkRXiKcK1AJMlvKQ/master.m3u8
 #EXTINF:-1 tvg-id="YRFMusic.in@Nepal",YRF Music Nepal
